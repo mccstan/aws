@@ -2,6 +2,7 @@
 layout: tutorial
 title: Un jeu multi-utilisateurs
 subtitle: (PHP+Silex)
+scripts: ['../js/Snap.svg/dist/snap.svg-min.js', '../assets/app-logic.js']
 ---
 
 Dans ce TD nous allons transformer notre jeu de Puissance 4 en un jeu
@@ -147,6 +148,9 @@ utilisateurs de se mettre d'accord pour jouer une partie de
 Puissance 4. La logique de cette partie est complexe, il est conseillé
 de lire et comprendre l'intégralité de la section avant d'attaquer les
 points individuels.
+
+<div id="app-logic"></div>
+
 
 1. Avec SQL Buddy, créer une table `parties` avec les champs
    suivants :

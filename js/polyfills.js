@@ -30,3 +30,11 @@ var $$ = (Document.prototype.$$ = Document.prototype.querySelectorAll).bind(docu
 Element.prototype.$ = Element.prototype.querySelector;
 Element.prototype.$$ = Element.prototype.querySelectorAll;
 NodeList.prototype.forEach = Array.prototype.forEach;
+Element.prototype.append = function(tag, ns) {
+    var elt;
+    if (ns !== undefined)
+	elt = document.createElementNS(ns, tag);
+    else
+	elt = document.createElement(tag);
+    return this.appendChild(elt);
+}
