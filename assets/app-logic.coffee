@@ -14,16 +14,17 @@ conf =
         d_w   : 200
 
 routes =
-        '/play'         :   0
-        '/api/userlist' :  50
-        '/api/challenge': 130
-        '/api/accept'   : 190
-        '/api/reject'   : 250
+        '/play'         :  20
+        '/api/userlist' :  70
+        '/api/challenge': 150
+        '/api/accept'   : 210
+        '/api/reject'   : 270
 
 div = $ '#app-logic'
 
-# The SVG for drawing arrows etc.
+# Svg canvas, for arrows etc.
 svg = (Snap conf.w, conf.h).appendTo div
+
 
 # The two clients
 c1 = div.append 'div#client1.client
@@ -53,20 +54,48 @@ for route, pos of routes
                 left     : '-30px'
 
 # JSON
-(div.append '''p.response
+(div.append '''p.response <div class="polling">
 { "users" : [
     { "login" : "client1",
       "parties" : 10, ... },
     ...
   ],
-  "notification" : {
+<div>  "notification" : {
     "type"  : "challenge",
-    "login" : "client1" }}''').css
-        top  : 130 + 'px'
+    "login" : "client1" }
+</div>}</div>''').css
+        top  : 170 + 'px'
         left : 600 + 'px'
 
 
+# Arrows
+svg.rect(0,0,conf.w,conf.h).attr
+        'fill': svg.path('M 0,0 L 0,100 100,100 100,0 z').attr('stroke' : '#ddd', 'fill':'none').pattern(0,0,100,100)
+
+g = svg.g().attr
+        'class'  : 'polling'
+        'stroke' : 'black'
+        'fill'   : 'none'
+tmp = g.path "M #{conf.s_left + conf.s_w},#{routes['/api/userlist'] + conf.s_top + 10}
+        t 40,0 40,60 130,40
+        T #{conf.w - conf.c_w / 2},#{conf.c_top}"
+
 # Generic CSS
+div.append 'style
+@keyframes pulse {
+        0%   { opacity: 1 }
+        30%  { opacity: 0.3 }
+        70%  { opacity: 0.3 }
+        100% { opacity: 1 }
+}
+@-webkit-keyframes pulse {
+        0%   { opacity: 1 }
+        30%  { opacity: 0.3 }
+        70%  { opacity: 0.3 }
+        100% { opacity: 1 }
+}
+'
+
 div.css
         margin   : 'auto'
         position : 'relative'
@@ -74,36 +103,37 @@ div.css
         height   : conf.h + 'px'
 
         '#server, .client, #db, svg, .route, .response' : 
-            position : 'absolute'
+                position : 'absolute'
         '#server, .client, #db' : 
-            fontSize : '70%'
+                fontSize : '70%'
         '#server, .client, #db table' : 
-            border : 'solid thin black'
-            borderRadius : '5px'
+                border : 'solid thin black'
+                borderRadius : '5px'
         
         '#server' : 
-            left   : conf.s_left + 'px'
-            top    : conf.s_top + 'px'
-            width  : conf.s_w + 'px'
-            height : conf.s_h + 'px'
+                left   : conf.s_left + 'px'
+                top    : conf.s_top + 'px'
+                width  : conf.s_w + 'px'
+                height : conf.s_h + 'px'
         '.route' : 
-            fontFamily      : 'Monospace, mono'
-            backgroundColor : 'white'
-            textAlign       : 'center'
+                fontFamily      : 'Monospace, mono'
+                backgroundColor : 'white'
+                textAlign       : 'center'
+                margin          : 0
 
         '#db' : 
-            width     : conf.d_w + 'px'
-            top       : conf.d_top + 'px'
-            left      : conf.d_left + 'px'
-            textAlign : 'center'
+                width     : conf.d_w + 'px'
+                top       : conf.d_top + 'px'
+                left      : conf.d_left + 'px'
+                textAlign : 'center'
         '#db table' : 
-            width     : conf.d_w + 'px'
+                width     : conf.d_w + 'px'
 
         '.client' : 
-            width    : conf.c_w - 20 + 'px'
-            height   : conf.c_h - 20 + 'px'
-            top      : conf.c_top + 'px'
-            padding  : '10px'
+                width    : conf.c_w - 20 + 'px'
+                height   : conf.c_h - 20 + 'px'
+                top      : conf.c_top + 'px'
+                padding  : '10px'
         '#client1' :
                 left  : '0px' 
         '#client2' :
@@ -111,20 +141,23 @@ div.css
 
         '.response' :
                 fontFamily : 'Monospace, mono'
-                fontSize   : '70%'
+                fontSize   : '50%'
                 whiteSpace : 'pre'
                 backgroundColor: 'white'
+        '.polling' :
+                animation : 'pulse 2s linear infinite'
+                '-webkit-animation' : 'pulse 2s linear infinite'
 
         'table' : 
-            border : 'solid thin black'
-            margin : 'auto'
+                border : 'solid thin black'
+                margin : 'auto'
         'td, th' : 
-            borderLeft : 'solid thin black'
-            padding : '2px'
+                borderLeft : 'solid thin black'
+                padding : '2px'
         '.client table' : 
-            width : '80%'
+                width : '80%'
         'a:not([href])' :  
-            color : 'red'
+                color : 'red'
 
 # Add a legend
 legend = (elt, legend, placement) ->
