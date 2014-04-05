@@ -2,7 +2,8 @@
 layout: tutorial
 title: Un jeu multi-utilisateurs
 subtitle: (PHP+Silex)
-scripts: ['../js/Snap.svg/dist/snap.svg-min.js', '../assets/app-logic.js']
+scripts: ['../js/Snap.svg/dist/snap.svg-min.js',
+          'http://coffeescript.org/extras/coffee-script.js']
 ---
 
 Dans ce TD nous allons transformer notre jeu de Puissance 4 en un jeu
@@ -150,7 +151,7 @@ de lire et comprendre l'intégralité de la section avant d'attaquer les
 points individuels.
 
 <div id="app-logic"></div>
-
+<script type="text/coffeescript" src="../assets/app-logic.coffee"></script>
 
 1. Avec SQL Buddy, créer une table `parties` avec les champs
    suivants :
