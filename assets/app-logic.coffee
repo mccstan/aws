@@ -54,31 +54,57 @@ for route, pos of routes
                 left     : '-30px'
 
 # JSON
-(div.append '''p.response <div class="polling">
-{ "users" : [
+(div.append '''p.response
+<div class="polling">{
+  "users" : [
     { "login" : "client1",
       "parties" : 10, ... },
-    ...
+      ...
   ],
-<div>  "notification" : {
+<div id="notification-ch">  "notification" : {
     "type"  : "challenge",
     "login" : "client1" }
 </div>}</div>''').css
-        top  : 170 + 'px'
+        top  : 140 + 'px'
         left : 600 + 'px'
-
+(div.append '''p.response
+<div class="polling">{
+  "users" : [
+    { "login" : "client1",
+      "parties" : 10, ... },
+      ...
+  ],
+<div id="notification-ac" style="display:none">  "notification" : {
+    "type"  : "accept",
+    "login" : "client2" }
+</div><div id="notification-re">  "notification" : {
+    "type"  : "reject",
+    "login" : "client2" }
+</div>}</div>''').css
+        top  : 40 + 'px'
+        left : 60 + 'px'
 
 # Arrows
 svg.rect(0,0,conf.w,conf.h).attr
         'fill': svg.path('M 0,0 L 0,100 100,100 100,0 z').attr('stroke' : '#ddd', 'fill':'none').pattern(0,0,100,100)
 
 g = svg.g().attr
-        'class'  : 'polling'
         'stroke' : 'black'
         'fill'   : 'none'
-tmp = g.path "M #{conf.s_left + conf.s_w},#{routes['/api/userlist'] + conf.s_top + 10}
+        'marker-end' : svg.path('M 0,0 l 0,10').attr('stroke' : 'black').marker(0,0,1,10,0,5)
+(g.path "M #{conf.s_left + conf.s_w},#{routes['/api/userlist'] + conf.s_top + 10}
         t 40,0 40,60 130,40
         T #{conf.w - conf.c_w / 2},#{conf.c_top}"
+).attr
+        'class'  : 'polling'
+(g.path "M #{conf.s_left},#{routes['/api/userlist'] + conf.s_top + 10}
+        t -90,0 -150,100 
+        T 70,#{conf.c_top}"
+).attr
+        'class'  : 'polling'
+g.path "M #{conf.c_w-40},#{conf.c_top}
+        t 20,-90
+        T #{conf.s_left - conf.rou_w / 2 },#{routes['/api/challenge'] + conf.s_top + 10}"
 
 # Generic CSS
 div.append 'style
