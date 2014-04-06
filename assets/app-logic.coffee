@@ -11,7 +11,7 @@ conf =
         rou_w : 60
         d_top : 20
         d_left: 600
-        d_w   : 200
+        d_w   : 400
 
 routes =
         '/play'         :  20
@@ -43,7 +43,9 @@ db = div.append 'div#db
         <table><tr><th>login</th><th>joue</th><tr>
         <tr><td>client1</td><td class="joue">NULL</td></tr>
         <tr><td>client2</td><td class="joue">NULL</td></tr>
-        <tr><td>...</td><td>...</td></tr></table>'
+        <tr><td>...</td><td>...</td></tr></table>
+        <table><tr><th>id</th><th>état</th></tr>
+        <tr><td>123</td><td class="etat"></td></tr></table>'
 
 # The server
 s = div.append 'div#server'
@@ -88,23 +90,56 @@ for route, pos of routes
 svg.rect(0,0,conf.w,conf.h).attr
         'fill': svg.path('M 0,0 L 0,100 100,100 100,0 z').attr('stroke' : '#ddd', 'fill':'none').pattern(0,0,100,100)
 
-g = svg.g().attr
+route_l = conf.s_left - conf.rou_w / 2
+route_r = conf.s_left + conf.s_w  + conf.rou_w / 2
+route_t = (r) -> routes[r] + conf.s_top + 10
+
+arrow = svg.path 'M -4,-6 L 10,0 -4,6 0,0 Z'
+        .marker -4,-6,14,12,10,0
+        .attr 'orient' : 'auto'
+
+req = svg.g().attr
         'stroke' : 'black'
         'fill'   : 'none'
-        'marker-end' : svg.path('M 0,0 l 0,10').attr('stroke' : 'black').marker(0,0,1,10,0,5)
-(g.path "M #{conf.s_left + conf.s_w},#{routes['/api/userlist'] + conf.s_top + 10}
+        'marker-end' : arrow
+req.path "M #{route_r},#{route_t('/api/userlist')}
         t 40,0 40,60 130,40
         T #{conf.w - conf.c_w / 2},#{conf.c_top}"
-).attr
-        'class'  : 'polling'
-(g.path "M #{conf.s_left},#{routes['/api/userlist'] + conf.s_top + 10}
-        t -90,0 -150,100 
+        .attr 'class' : 'polling'
+req.path "M #{route_l},#{route_t('/api/userlist')}
+        t -70,0 -130,100 
         T 70,#{conf.c_top}"
-).attr
-        'class'  : 'polling'
-g.path "M #{conf.c_w-40},#{conf.c_top}
-        t 20,-90
-        T #{conf.s_left - conf.rou_w / 2 },#{routes['/api/challenge'] + conf.s_top + 10}"
+        .attr 'class' : 'polling'
+req.path "M #{conf.c_w - 40},#{conf.c_top}
+        t 20,-80
+        T #{route_l},#{route_t('/api/challenge')}"
+req.path "M #{conf.w - conf.c_w},#{conf.c_top + conf.c_h / 2}
+        t -60,0 -60,-100
+        T #{route_r},#{route_t('/api/accept')}"
+req.path "M #{conf.w - conf.c_w},#{conf.c_top + conf.c_h / 2}
+        t -60,0 -60,-80
+        T #{route_r},#{route_t('/api/reject')}"
+
+play = svg.g().attr
+        'stroke' : 'black'
+        'fill'   : 'none'
+        'marker-end' : arrow
+
+play.path "M #{conf.c_w / 2},#{conf.c_top}
+        t 10,-100
+        T #{route_l},#{route_t('/play')}"
+play.path "M #{conf.w - conf.c_w / 2},#{conf.c_top}
+        t -10,-60 -130,-60 -130,-90
+        T #{route_r},#{route_t('/play')}"
+        
+svg.path "M #{conf.s_left + conf.s_w},#{conf.s_top - 10}
+        L #{conf.d_left},#{conf.d_top - 10}"
+        .attr
+                'stroke' : 'black'
+                'fill'   : 'none'
+                'marker-start' : arrow.clone().attr 'orient' : '180'
+                'marker-end'   : arrow
+
 
 # Generic CSS
 div.append 'style
@@ -152,8 +187,10 @@ div.css
                 top       : conf.d_top + 'px'
                 left      : conf.d_left + 'px'
                 textAlign : 'center'
-        '#db table' : 
-                width     : conf.d_w + 'px'
+        '#db table' :
+                display       : 'inline-table'
+                width         : '45%'
+                verticalAlign : 'top'
 
         '.client' : 
                 width    : conf.c_w - 20 + 'px'
